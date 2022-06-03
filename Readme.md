@@ -18,6 +18,11 @@ docker pull westpointrobotics/aquaticus:jammy
 docker pull westpointrobotics/aquaticus:focal
 docker pull westpointrobotics/aquaticus:bionic
 ```
+## Docker
+
+Docker tutorial is out of scope for this document.  But a quick note -- 
+if you skipped the [post-installation tasks](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user),
+you'll likely need to use `sudo` for any docker commands.
 
 ## Submissions
 
