@@ -60,6 +60,32 @@ Ideally, each submission should launch on container start, with the ability to
 modify command line arguments.  See the commented out portion at the end of this
 repo's Dockerfile.
 
+One way to build a submission image is to extend the Dockerfile in this repo
+to include your custom behaviors, and then to build that Dockerfile.
+
+Another approach is to develop in one of the base images, get your behaviors
+working in it, and then committing the changes as a new image.  In this case
+you will want to persist the container (so don't use the `--rm` tag)
+
+```bash
+# tag the image with a convenient name
+docker tag westpointrobotics/aquaticus:jammy mydev
+
+# get bash shell inside container
+docker run -it --name mydev mydev
+# ...add and test behaviors
+exit
+
+# go bach and do more work on it
+docker start -ai mydev
+# ...do more work
+exit
+
+# when ready to go
+docker commit mydev aquaticus.azurecr.io/teamname/aquaticus:v1
+docker push aquaticus.azurecr.io/teamname/aquaticus:v1
+```
+
 ## Test submission
 
 In order to test the submission process, push a hello-world image to the submission registry.
