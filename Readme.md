@@ -76,7 +76,7 @@ docker run -it --name mydev mydev
 # ...add and test behaviors
 exit
 
-# go bach and do more work on it
+# go back and do more work on it
 docker start -ai mydev
 # ...do more work
 exit
