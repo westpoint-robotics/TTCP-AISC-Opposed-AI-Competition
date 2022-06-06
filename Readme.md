@@ -24,6 +24,21 @@ Docker tutorial is out of scope for this document.  But a quick note --
 if you skipped the [post-installation tasks](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user),
 you'll likely need to use `sudo` for any docker commands.
 
+You can test the application like so:
+
+```bash
+# get bash shell inside container
+docker run --rm -it --net host westpointrobotics/aquaticus:jammy
+
+# change to mission directory
+cd moos-ivp-aquaticus/missions/bots-only-example
+
+# launch application
+./launch_demo
+
+# if you don't see the user interface, check the X11 section below
+```
+
 ## Submissions
 
 Participants can submit competition entries as docker images at  the 
@@ -53,15 +68,20 @@ The password token for testing is shared among all participants; add a unique ta
 hello-world image so competition admins can see who has tested successfully.
 
 ```bash
-docker pull hello-world
-
-docker tag hello-world aquaticus.azurecr.io/test/hello-world:teamname
 
 docker login
   Username: aquaticus-test
   Password: ********* (published by competition director)
 
+# retrieve test image
+docker pull aquaticus.azurecr.io/test/hello-world:westpointrobotics
+docker run --rm -it aquaticus.azurecr.io/test/hello-world:westpointrobotics
+
+# push your custom image
+docker pull hello-world
+docker tag hello-world aquaticus.azurecr.io/test/hello-world:teamname
 docker push aquaticus.azurecr.io/test/hello-world:teamname
+
 ```
 
 ## Details
