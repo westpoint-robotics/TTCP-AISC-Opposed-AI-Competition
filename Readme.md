@@ -28,7 +28,7 @@ You can test the application like so:
 
 ```bash
 # get bash shell inside container
-docker run --rm -it --net host westpointrobotics/aquaticus:jammy
+docker run --rm -it -e DISPLAY -v /tmp/.X11-unix --net host westpointrobotics/aquaticus:jammy
 
 # change to mission directory
 cd moos-ivp-aquaticus/missions/bots-only-example
