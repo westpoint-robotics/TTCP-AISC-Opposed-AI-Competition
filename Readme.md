@@ -119,7 +119,7 @@ docker push aquaticus.azurecr.io/test/hello-world:teamname
 
     The simplest means is to run your container on the host network.
     ```bash
-    docker run --rm -it --net host ...
+    docker run --rm -it -e DISPLAY -v /tmp/.X11-unix --net host ...
     ```
 
     You may also need to address X authentication. Running `xhost +` on your host
