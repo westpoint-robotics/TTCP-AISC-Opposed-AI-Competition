@@ -72,7 +72,7 @@ you will want to persist the container (so don't use the `--rm` tag)
 docker tag westpointrobotics/aquaticus:jammy mydev
 
 # get bash shell inside container
-docker run -it --name mydev mydev
+docker run -it -e DISPLAY -v /tmp/.X11-unix --name mydev mydev
 # ...add and test behaviors
 exit
 
