@@ -3,12 +3,14 @@ FROM ubuntu:jammy
 
 # install dependencies
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    subversion g++ cmake \
+    subversion g++ cmake sudo \
     libncurses-dev libfltk1.3-dev freeglut3-dev libpng-dev libjpeg-dev libxft-dev libxinerama-dev libtiff5-dev \
     && apt-get clean
 
 # create user
-RUN useradd -m -p "moos" moos && usermod -a -G sudo moos
+RUN useradd -m -p "moos" moos && \
+    usermod -a -G sudo moos && \
+    echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 USER moos
 WORKDIR /home/moos
 
@@ -29,6 +31,6 @@ ENV PATH /home/moos/moos-ivp-aquaticus/bin:/home/moos/moos-ivp/bin:$PATH
 ENV IVP_BEHAVIOR_DIRS=/home/moos/moos-ivp-aquaticus/lib:/home/moos/moos-ivp-aquaticus/lib
 
 ## For submissions, start the app on container start
-# WORKDIR /home/moos/moos-ivp-aquaticus/missions/bots-only-example
+WORKDIR /home/moos/moos-ivp-aquaticus/missions/competition-2022
 # ENTRYPOINT ["bash", "launch_demo.sh"]
 # CMD ["5"]
