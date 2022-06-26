@@ -3,7 +3,7 @@ shoreside_script=/comp/shoreside.sh
 opfor_script=/comp/opfor-1v1.sh
 placeholder_script=/comp/placeholder-1v1.sh
 entries=manifest.csv
-control_repo=westpointrobotics/aquaticus:fixed
+control_repo=westpointrobotics/aquaticus:jammy
 compdir=`pwd`
 target=${1:-unknown}
 shift
@@ -38,7 +38,8 @@ docker run --rm -d --name shoreside\
     -e DISPLAY -v /tmp/.X11-unix \
     --net host \
     -v $compdir:/comp \
-    $control_repo $shoreside_script $logpath $@
+    $control_repo $shoreside_script $@
+# TODO: above line needs $logpath, after base docker image is fixed
 
 # run opfor
 docker run --rm -d --name opfor -v $compdir:/comp --net host $control_repo $opfor_script $logpath $@
