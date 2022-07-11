@@ -1,7 +1,6 @@
 #!/bin/bash
 shoreside_script=/comp/shoreside.sh
 opfor_script=/comp/opfor-1v1.sh
-placeholder_script=/comp/placeholder-1v1.sh
 entries=manifest.csv
 control_repo=westpointrobotics/aquaticus:jammy
 compdir=`pwd`
