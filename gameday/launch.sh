@@ -38,8 +38,7 @@ docker run --rm -d --name shoreside\
     -e DISPLAY -v /tmp/.X11-unix \
     --net host \
     -v $compdir:/comp \
-    $control_repo $shoreside_script $@
-# TODO: above line needs $logpath, after base docker image is fixed
+    $control_repo $shoreside_script $logpath $@
 
 # run opfor
 docker run --rm -d --name opfor -v $compdir:/comp --net host $control_repo $opfor_script $logpath $@
