@@ -1,5 +1,5 @@
 # Example event manifest
-# name, docker_image, username, password, script
-usma-1v1, westpointrobotics/aquaticus:focal, , ,/comp/placeholder-1v1.sh
-usma-2v2, westpointrobotics/aquaticus:jammy, , ,/comp/placeholder-2v2.sh
-jeff-v1, westpointrobotics/aquaticus:bionic, , , launch_demo.sh
+# name, docker_image, username, password, blufor-script, opfor-script
+usma-1v1, westpointrobotics/aquaticus:focal, , , /comp/placeholder-1v1.sh, /comp/opfor-r1.sh
+usma-2v2, westpointrobotics/aquaticus:jammy, , , /comp/placeholder-2v2.sh, /comp/opfor-r1.sh
+jeff-v1, westpointrobotics/aquaticus:bionic, , , /comp/placeholder-1v1.sh, /comp/opfor-r1.sh

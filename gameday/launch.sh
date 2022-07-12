@@ -1,7 +1,6 @@
 #!/bin/bash
-shoreside_script=/comp/shoreside.sh
-opfor_script=/comp/opfor-1v1.sh
 entries=manifest.csv
+shoreside_script=/comp/shoreside.sh
 control_repo=westpointrobotics/aquaticus:jammy
 compdir=`pwd`
 target=${1:-unknown}
@@ -40,7 +39,7 @@ docker run --rm -d --name shoreside\
     $control_repo $shoreside_script $logpath $@
 
 # run opfor
-docker run --rm -d --name opfor -v $compdir:/comp --net host $control_repo $opfor_script $logpath $@
+docker run --rm -d --name opfor -v $compdir:/comp --net host $control_repo ${d[5]} $logpath $@
 
 # run contestant
 docker run --rm -d --name contestant -v $compdir:/comp --net host ${d[1]} ${d[4]} $logpath $@
