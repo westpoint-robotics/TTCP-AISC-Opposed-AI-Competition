@@ -1,51 +1,71 @@
 #!/bin/bash
 entries=manifest.csv
 shoreside_script=/comp/shoreside.sh
-control_repo=westpointrobotics/aquaticus:jammy
+shoreside_repo=westpointrobotics/aquaticus:jammy
 compdir=`pwd`
-target=${1:-unknown}
-shift
-meta=`grep $target $entries`
+blue_id=${1:-unknown}
+blue=`cat $entries | grep $blue_id`
+red_id=${2:-unknown}
+red=`cat $entries | grep $red_id`
+warp=${3:-4}
 
-if [ -z "$meta" ]; then
-    echo "usage: $0 <contestant-entry> [warp]"
+if [ -z "$blue" -o -z "$red" ]; then
+    echo "usage: $0 <blue_id> <red_id> [warp]"
     echo "select from:"
     cat $entries | grep -v "#" | awk -F, '{print "\t"$1}'
     echo ""
     exit 0
 fi
 
-IFS=',' read -ra d  <<< $(echo $meta | sed s/\ //g)
+IFS=',' read -ra b  <<< $(echo $blue)
+IFS=',' read -ra r  <<< $(echo $red)
 
 # initialize log folder
-logdir=`date -u +%Y%m%d_%H%M%SZ`_${d[0]}
+logdir=`date -u +%Y%m%d_%H%M%SZ`_${b[0]}-vs-${r[0]}
 mkdir -p $compdir/log/$logdir
 logpath=--logpath=/comp/log/$logdir
 
 # if creds, login
-if [ -n "${d[2]}" ]; then
-    host=`echo ${d[1]} | awk -F/ '{print $1}'`
-    docker login $host -u ${d[2]} -p ${d[3]}
+if [ -n "${b[2]}" ]; then
+    host=`echo ${b[1]} | awk -F/ '{print $1}'`
+    docker login $host -u ${b[2]} -p ${b[3]}
+fi
+if [ -n "${r[2]}" ]; then
+    host=`echo ${r[1]} | awk -F/ '{print $1}'`
+    docker login $host -u ${r[2]} -p ${r[3]}
 fi
 
-# pull contestant image
-docker pull ${d[1]}
+# pull team images
+docker pull ${b[1]}
+echo ""
+docker pull ${r[1]}
+echo ""
 
 # run shoreside
 docker run --rm -d --name shoreside\
     -e DISPLAY -v /tmp/.X11-unix \
     --net host \
     -v $compdir:/comp \
-    $control_repo $shoreside_script $logpath $@
+    $shoreside_repo $shoreside_script $warp $logpath
+echo "**** shoreside launched..."
+echo ""
 
-# run opfor
-docker run --rm -d --name opfor -v $compdir:/comp --net host $control_repo ${d[5]} $logpath $@
+# run red
+echo docker run --rm -d --name team_red -v $compdir:/comp --net host ${r[1]} ${r[4]} red $warp $logpath
+docker run --rm -d --name team_red -v $compdir:/comp --net host ${r[1]} ${r[4]} red $warp $logpath
+echo "**** team_red launched..."
+echo ""
 
-# run contestant
-docker run --rm -d --name contestant -v $compdir:/comp --net host ${d[1]} ${d[4]} $logpath $@
+# run blue
+echo docker run --rm -d --name team_blue -v $compdir:/comp --net host ${b[1]} ${b[4]} blue $warp $logpath
+docker run --rm -d --name team_blue -v $compdir:/comp --net host ${b[1]} ${b[4]} blue $warp $logpath
+echo "**** team_blue launched..."
+echo ""
 
 # wait for quit
-echo ${d[0]} simulation running\!
+echo "****"
+echo "**** ${d[0]} simulation running\!"
+echo "****"
 cancel=""
 while [ -z "$cancel" ]; do
     echo -n "Quit? [q] "
@@ -56,4 +76,4 @@ done
 
 # clean up
 echo cleaning up...
-docker stop shoreside opfor contestant
+docker stop shoreside team_blue team_red

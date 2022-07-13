@@ -1,5 +1,11 @@
-# Example event manifest
-# name, docker_image, username, password, blufor-script, opfor-script
-usma-1v1, westpointrobotics/aquaticus:focal, , , /comp/placeholder-1v1.sh, /comp/opfor-r1.sh
-usma-2v2, westpointrobotics/aquaticus:jammy, , , /comp/placeholder-2v2.sh, /comp/opfor-r1.sh
-jeff-v1, westpointrobotics/aquaticus:bionic, , , /comp/placeholder-1v1.sh, /comp/opfor-r1.sh
+# name, docker_image, username, password, launch-script
+usma_1de, westpointrobotics/aquaticus:jammy,,,/comp/usma_1de.sh
+usma_1dm, westpointrobotics/aquaticus:jammy,,,/comp/usma_1dm.sh
+usma_1ae, westpointrobotics/aquaticus:jammy,,,/comp/usma_1ae.sh
+usma_1am, westpointrobotics/aquaticus:jammy,,,/comp/usma_1am.sh
+usma_2de, westpointrobotics/aquaticus:jammy,,,/comp/usma_2de.sh
+usma_2dm, westpointrobotics/aquaticus:jammy,,,/comp/usma_2dm.sh
+usma_2ae, westpointrobotics/aquaticus:jammy,,,/comp/usma_2ae.sh
+usma_2am, westpointrobotics/aquaticus:jammy,,,/comp/usma_2am.sh
+usma_2me, westpointrobotics/aquaticus:jammy,,,/comp/usma_2me.sh
+usma_2mm, westpointrobotics/aquaticus:jammy,,,/comp/usma_2mm.sh
