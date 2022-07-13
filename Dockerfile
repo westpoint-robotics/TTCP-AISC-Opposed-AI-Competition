@@ -32,5 +32,5 @@ ENV IVP_BEHAVIOR_DIRS=/home/moos/moos-ivp-aquaticus/lib:/home/moos/moos-ivp-aqua
 
 ## For submissions, start the app on container start
 WORKDIR /home/moos/moos-ivp-aquaticus/missions/competition-2022
-# ENTRYPOINT ["bash", "launch_demo.sh"]
-# CMD ["5"]
+ENTRYPOINT ["/bin/bash"]
+# CMD ["launch_demo.sh"]

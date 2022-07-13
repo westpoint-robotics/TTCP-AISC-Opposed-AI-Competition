@@ -4,10 +4,10 @@ Collection of scripts for smooth execution of a live event.
 
 # Manifest
 
-Before the event collect the pertinent data for each submission and record it
+Before the event collect the pertinent data for each performer and record it
 in `manifest.csv`.
 This includes the submission name, the docker image, container registry creds (if necessary),
-and the name of the script to execute.
+and the name of the launch script to execute.
 
 __** NOTE **__ Because the `manifest.csv` could hold docker registry login secrets, care should be taken
 to prevent it from being displayed to an audience.  
@@ -17,14 +17,29 @@ executing the event.
 
 # Launch
 
-Launch runs a shoreside container, an opfor container, and the contestant container.
+We launch a shoreside container, an team_blue container, and a team_red container.
 
-This folder is mounted into the container, so the event director can launch opfor
+Ideally, the container's launch script can support running as red or blue.
+For example, see how the included *.sh files accept a flag parameter and launched
+herons based in its color value.
+
+This allows the possibility of pairing any entry against another entry.
+The usage is `./launch.sh <blue> <red> [warp]` (warp defaults to 4).
+So we can run any combination:
+
+```bash
+# run usma_1ae (1 boat, attack, easy) against usma_1dm (1 boat, defend, medium)
+./launch usma_1ae usma_1dm
+
+# run usma_2mm (2 boats, mixed, medium) against usma_1am (1 boat, attack, medium)
+./launch usma_2mm usma_1am
+```
+
+This folder is mounted into the container, so the event director can launch modified
 scenario scripts prepared in advance while maintaining the flexibility the easily
 alter the environment on the fly (but still capitalizing on the benefits of containers).
 
-__** NOTE **__ The `placeholder-*.sh` scripts in this folder are *placeholders* with which to demo these scripts.
-The *actual* contestant scripts should be in the working directory of the submitted docker image.
+The *actual* performer launch script should be in the working directory of the submitted docker image.
 
 # Logs
 
