@@ -1,9 +1,13 @@
+##
+## Dockerfile for building aquaticus source images
+##
+
 # choose base image (bionic focal jammy)
 FROM ubuntu:jammy
 
 # install dependencies
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    subversion g++ cmake sudo \
+    subversion g++ cmake sudo curl git vim emacs \
     libncurses-dev libfltk1.3-dev freeglut3-dev libpng-dev libjpeg-dev libxft-dev libxinerama-dev libtiff5-dev \
     && apt-get clean
 
@@ -21,9 +25,10 @@ RUN svn export https://oceanai.mit.edu/svn/moos-ivp-aro/releases/moos-ivp-19.8.1
     cd -
 
 # build aquaticus
-RUN svn export https://oceanai.mit.edu/svn/moos-ivp-aquaticus-oai/trunk/ moos-ivp-aquaticus && \
+RUN svn export https://oceanai.mit.edu/svn/moos-ivp-aquaticus-oai/trunk/ moos-ivp-aquaticus > /tmp/svn-export && \
     cd moos-ivp-aquaticus && \
     ./build.sh && \
+    tail -n1 /tmp/svn-export > revision.txt && \
     cd -
 
 # set vars

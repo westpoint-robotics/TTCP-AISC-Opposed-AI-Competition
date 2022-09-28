@@ -1,0 +1,33 @@
+##
+## Example docker file for building on top of the aquaticus source image
+##
+
+# choose base image (bionic focal jammy)
+FROM aisc5.azurecr.us/source/aquaticus:jammy
+
+# set runtime user to root for setup convenience
+USER root
+
+## Start of commands to build your image
+
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    curl \
+    && apt-get clean
+
+RUN mkdir -p /home/moos/jam/bin
+# additional commands
+
+## End of commands to alter your image
+
+
+## set runtime user back to moos
+USER moos
+
+## update env vars
+# ENV PATH your-additional-bin-folder:$PATH
+# ENV IVP_BEHAVIOR_DIRS=your-additional-lib-folder:$IVP_BEHAVIOR_DIRS
+
+## change the below if necessary for your case
+# WORKDIR /home/moos/moos-ivp-aquaticus/missions/competition-2022
+# ENTRYPOINT ["/bin/bash"]
+# CMD ["launch_demo.sh"]

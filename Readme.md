@@ -14,9 +14,11 @@ image will be used to execute participant submissions during the competition.
 
 It is most efficient to build from one of these base images:
 ```
-docker pull westpointrobotics/aquaticus:jammy
-docker pull westpointrobotics/aquaticus:focal
-docker pull westpointrobotics/aquaticus:bionic
+docker login aisc5.azurecr.us
+
+docker pull aisc5.azurecr.us/source/aquaticus:jammy
+docker pull aisc5.azurecr.us/source/aquaticus:focal
+docker pull aisc5.azurecr.us/source/aquaticus:bionic
 ```
 ## Docker
 
@@ -27,8 +29,9 @@ you'll likely need to use `sudo` for any docker commands.
 You can test the application like so:
 
 ```bash
+
 # get bash shell inside container
-docker run --rm -it -e DISPLAY -v /tmp/.X11-unix --net host westpointrobotics/aquaticus:jammy
+docker run --rm -it -e DISPLAY -v /tmp/.X11-unix --net host aisc5.azurecr.us/source/aquaticus:jammy
 
 # change to mission directory
 cd moos-ivp-aquaticus/missions/bots-only-example
@@ -42,34 +45,39 @@ cd moos-ivp-aquaticus/missions/bots-only-example
 ## Submissions
 
 Participants can submit competition entries as docker images at  the 
-aquaticus.azurecr.io docker registry.
+aisc5.azurecr.us docker registry.
 Credentials are available from the competition director.
-Your credentials are tied to the `aquaticus.azurecr.io/teamname/aquaticus` repository.
+Your credentials are tied to the `aisc5.azurecr.us/teamname/aquaticus` repository.
 To make multiple submissions, submit different tags (i.e. v1, v2, etc.).
 
 ```
-docker login aquaticus.azurecr.io
+docker login aisc5.azurecr.us
   Username: teamname
-  Password: ******** (token received from competition director)
+  Password: ********
 
-docker tag my_dev_image aquaticus.azurecr.io/teamname/aquaticus:v1
-docker push aquaticus.azurecr.io/teamname/aquaticus:v1
+docker tag my_dev_image aisc5.azurecr.us/teamname/aquaticus:v1
+docker push aisc5.azurecr.us/teamname/aquaticus:v1
 ```
 
 Ideally, each submission should launch on container start, with the ability to
 modify command line arguments.  See the commented out portion at the end of this
 repo's Dockerfile.
 
-One way to build a submission image is to extend the Dockerfile in this repo
-to include your custom behaviors, and then to build that Dockerfile.
+The optimal way to build a submission image is to create a Dockerfile in this repo
+to include your custom behaviors, and then to build that Dockerfile. See the 
+`Dockerfile.example`.  This allows one to easily rebuild the image when the 
+underlying source image gets updated. It also streamlines the push/pull transmissions
+as only new layers of the image are transferred.
 
 Another approach is to develop in one of the base images, get your behaviors
 working in it, and then committing the changes as a new image.  In this case
-you will want to persist the container (so don't use the `--rm` tag)
+you will want to persist the container (so don't use the `--rm` tag).  This 
+method isn't ideal because one must redo the customization work if the source
+image gets updated.
 
 ```bash
 # tag the image with a convenient name
-docker tag westpointrobotics/aquaticus:jammy mydev
+docker tag aisc5.azurecr.us/source/aquaticus:jammy mydev
 
 # get bash shell inside container
 docker run -it -e DISPLAY -v /tmp/.X11-unix --name mydev mydev
@@ -82,32 +90,8 @@ docker start -ai mydev
 exit
 
 # when ready to go
-docker commit mydev aquaticus.azurecr.io/teamname/aquaticus:v1
-docker push aquaticus.azurecr.io/teamname/aquaticus:v1
-```
-
-## Test submission
-
-In order to test the submission process, push a hello-world image to the submission registry.
-
-The password token for testing is shared among all participants; add a unique tag to your 
-hello-world image so competition admins can see who has tested successfully.
-
-```bash
-
-docker login
-  Username: aquaticus-test
-  Password: ********* (published by competition director)
-
-# retrieve test image
-docker pull aquaticus.azurecr.io/test/hello-world:westpointrobotics
-docker run --rm -it aquaticus.azurecr.io/test/hello-world:westpointrobotics
-
-# push your custom image
-docker pull hello-world
-docker tag hello-world aquaticus.azurecr.io/test/hello-world:teamname
-docker push aquaticus.azurecr.io/test/hello-world:teamname
-
+docker commit mydev aisc5.azurecr.us/teamname/aquaticus:v1
+docker push aisc5.azurecr.us/teamname/aquaticus:v1
 ```
 
 ## Details
