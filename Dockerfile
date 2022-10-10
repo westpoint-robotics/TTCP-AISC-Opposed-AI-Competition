@@ -18,8 +18,8 @@ RUN useradd -m -p "moos" moos && \
 USER moos
 WORKDIR /home/moos
 
-# build moos
-RUN svn export https://oceanai.mit.edu/svn/moos-ivp-aro/releases/moos-ivp-19.8.1 moos-ivp && \
+# build moos trunk/head
+RUN svn export https://oceanai.mit.edu/svn/moos-ivp-aro/trunk/ moos-ivp && \
     cd moos-ivp && \
     ./build.sh && \
     cd -
@@ -31,11 +31,17 @@ RUN svn export https://oceanai.mit.edu/svn/moos-ivp-aquaticus-oai/trunk/ moos-iv
     tail -n1 /tmp/svn-export > revision.txt && \
     cd -
 
+#build robot drivers
+RUN git clone https://github.com/westpoint-robotics/mdo-hurt-s.git && \
+cd mdo-hurt-s/moos-ivp-surveyor/ && \
+./build.sh && \
+cd ~
+
 # set vars
-ENV PATH /home/moos/moos-ivp-aquaticus/bin:/home/moos/moos-ivp/bin:$PATH
+ENV PATH /home/moos/moos-ivp-aquaticus/bin:/home/moos/moos-ivp/bin:/home/moos/mdo-hurt-s/moos-ivp-surveyor/bin:$PATH
 ENV IVP_BEHAVIOR_DIRS=/home/moos/moos-ivp-aquaticus/lib:/home/moos/moos-ivp-aquaticus/lib
 
 ## For submissions, start the app on container start
-WORKDIR /home/moos/moos-ivp-aquaticus/missions/competition-2022
+WORKDIR /home/moos/moos-ivp-aquaticus/missions/oct_wp_competition-2022
 ENTRYPOINT ["/bin/bash"]
 # CMD ["launch_demo.sh"]
