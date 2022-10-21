@@ -33,9 +33,9 @@ RUN svn export https://oceanai.mit.edu/svn/moos-ivp-aquaticus-oai/trunk/ moos-iv
 
 #build robot drivers
 RUN git clone https://github.com/westpoint-robotics/mdo-hurt-s.git && \
-cd mdo-hurt-s/moos-ivp-surveyor/ && \
-./build.sh && \
-cd ~
+    cd mdo-hurt-s/moos-ivp-surveyor/ && \
+    ./build.sh && \
+    cd -
 
 # set vars
 ENV PATH /home/moos/moos-ivp-aquaticus/bin:/home/moos/moos-ivp/bin:/home/moos/mdo-hurt-s/moos-ivp-surveyor/bin:$PATH

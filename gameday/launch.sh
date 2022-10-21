@@ -1,7 +1,7 @@
 #!/bin/bash
 entries=manifest.csv
 shoreside_script=/comp/shoreside.sh
-shoreside_repo=westpointrobotics/aquaticus:jammy
+shoreside_repo=aisc5.azurecr.us/source/aquaticus:jammy
 compdir=`pwd`
 blue_id=${1:-unknown}
 blue=`cat $entries | grep $blue_id`
@@ -25,16 +25,6 @@ logdir=`date -u +%Y%m%d_%H%M%SZ`_${b[0]}-vs-${r[0]}
 mkdir -p $compdir/log/$logdir
 logpath=--logpath=/comp/log/$logdir
 
-# if creds, login
-if [ -n "${b[2]}" ]; then
-    host=`echo ${b[1]} | awk -F/ '{print $1}'`
-    docker login $host -u ${b[2]} -p ${b[3]}
-fi
-if [ -n "${r[2]}" ]; then
-    host=`echo ${r[1]} | awk -F/ '{print $1}'`
-    docker login $host -u ${r[2]} -p ${r[3]}
-fi
-
 # pull team images
 docker pull ${b[1]}
 echo ""
@@ -51,14 +41,14 @@ echo "**** shoreside launched..."
 echo ""
 
 # run red
-echo docker run --rm -d --name team_red -v $compdir:/comp --net host ${r[1]} ${r[4]} red $warp $logpath
-docker run --rm -d --name team_red -v $compdir:/comp --net host ${r[1]} ${r[4]} red $warp $logpath
+echo docker run --rm -d --name team_red -v $compdir:/comp --net host --entrypoint /bin/bash ${r[1]} ${r[2]} red ${r[0]} $warp $logpath
+docker run --rm -d --name team_red -v $compdir:/comp --net host --entrypoint /bin/bash ${r[1]} ${r[2]} red ${r[0]} $warp $logpath
 echo "**** team_red launched..."
 echo ""
 
 # run blue
-echo docker run --rm -d --name team_blue -v $compdir:/comp --net host ${b[1]} ${b[4]} blue $warp $logpath
-docker run --rm -d --name team_blue -v $compdir:/comp --net host ${b[1]} ${b[4]} blue $warp $logpath
+echo docker run --rm -d --name team_blue -v $compdir:/comp --net host --entrypoint /bin/bash ${b[1]} ${b[2]} blue ${b[0]}$warp $logpath
+docker run --rm -d --name team_blue -v $compdir:/comp --net host --entrypoint /bin/bash ${b[1]} ${b[2]} blue ${b[0]} $warp $logpath
 echo "**** team_blue launched..."
 echo ""
 

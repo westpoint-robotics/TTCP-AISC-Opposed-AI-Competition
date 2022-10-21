@@ -6,20 +6,20 @@ Collection of scripts for smooth execution of a live event.
 
 Before the event collect the pertinent data for each performer and record it
 in `manifest.csv`.
-This includes the submission name, the docker image, container registry creds (if necessary),
-and the name of the launch script to execute.
-
-__** NOTE **__ Because the `manifest.csv` could hold docker registry login secrets, care should be taken
-to prevent it from being displayed to an audience.  
+This includes the submission name, the docker image, and the name of the launch script to execute.
 
 If collecting submitted docker images before gameday, ensure they are loaded on the host
 executing the event.
 
 # Launch
 
-We launch a shoreside container, an team_blue container, and a team_red container.
+We launch a shoreside container, a team_blue container, and a team_red container.
 
-Ideally, the container's launch script can support running as red or blue.
+We inject a launch scripts into the container. So it is helpful if entries have
+a readme file in the working directory describing how the behavior(s) can be launched.
+
+Ideally, the image can support running as red or blue. 
+Or separate images could be submitted.
 For example, see how the included *.sh files accept a flag parameter and launched
 herons based in its color value.
 
@@ -28,8 +28,8 @@ The usage is `./launch.sh <blue> <red> [warp]` (warp defaults to 4).
 So we can run any combination:
 
 ```bash
-# run usma_1ae (1 boat, attack, easy) against usma_1dm (1 boat, defend, medium)
-./launch usma_1ae usma_1dm
+# run usma_de (1 boat, defend, easy) against demo_am (1 boat, attack, medium)
+./launch demo_de demo_am
 
 # run usma_2mm (2 boats, mixed, medium) against usma_1am (1 boat, attack, medium)
 ./launch usma_2mm usma_1am
@@ -38,13 +38,3 @@ So we can run any combination:
 This folder is mounted into the container, so the event director can launch modified
 scenario scripts prepared in advance while maintaining the flexibility the easily
 alter the environment on the fly (but still capitalizing on the benefits of containers).
-
-The *actual* performer launch script should be in the working directory of the submitted docker image.
-
-# Logs
-
-Each container collects logs to a location specified by a `--logpath=...` argument
-to the container execution script.  For contestants, ensure your primary script
-accepts that parameter and propagates it to moos. See the 
-`/home/moos/moos-ivp-aquaticus/missions/competition-2022/launch_demo.sh` script 
-for an example.
